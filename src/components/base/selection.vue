@@ -36,6 +36,7 @@ export default {
       chooseSelection: function(index){
           this.nowIndex = index;
           this.toggleDrop();
+          this.$emit('on-change',this.selections[this.nowIndex]);
       }
   }
 }

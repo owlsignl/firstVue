@@ -6,6 +6,7 @@ import analysisPage from '../page/detail/analysis'
 import countPage from '../page/detail/count'
 import forecastPage from '../page/detail/forecast'
 import publishPage from '../page/detail/publish'
+import orderlistPage from '../page/orderList'
 Vue.use(Router)
 
 export default new Router({
@@ -14,6 +15,10 @@ export default new Router({
     {
       path: '/',
       component: indexPage
+    },
+    {
+      path: '/orderList',
+      component: orderlistPage
     },
     {
       path: '/detail',

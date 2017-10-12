@@ -30,12 +30,13 @@ export default {
   methods:{
       chosenSelection: function(index){
           this.nowIndex = index;
+          this.$emit('on-change',this.selections[this.nowIndex]);
       }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .chooser-component {
   position: relative;
   display: inline-block;

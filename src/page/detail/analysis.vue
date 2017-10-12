@@ -80,7 +80,7 @@
           <li>用户所在地理区域分布状况等</li>
         </ul>
       </div>
-      <!--<my-dialog :is-show="isShowPayDialog" @on-close="hidePayDialog">
+      <my-dialog :is-show="isShowPayDialog" @on-close="hidePayDialog">
         <table class="buy-dialog-table">
           <tr>
             <th>购买数量</th>
@@ -109,7 +109,6 @@
         支付失败！
       </my-dialog>
       <check-order :is-show-check-dialog="isShowCheckOrder" :order-id="orderId" @on-close-check-dialog="hideCheckOrder"></check-order>
-    -->
   </div>
 </template>
 
@@ -119,16 +118,25 @@ import VChooser from '../../components/base/chooser'
 import VMulChooser from '../../components/base/multiplyChose'
 import Dialog from '../../components/base/dialog'
 import VCounter from '../../components/base/counter'
+import BankChooser from '../../components/base/bankChooser'
+import CheckOrder from '../../components/checkOrder'
 export default {
   components: {
     VCounter,
     VSelection,
     VChooser,
     VMulChooser,
-    MyDialog:Dialog
+    MyDialog:Dialog,
+    BankChooser,
+    CheckOrder
   },
   data () {
     return {
+      buyNum:0,
+      versions: [],
+      buyType: {},
+      period: {},
+      price: 0,
       versionList: [
         {
           label: '客户版',
@@ -170,9 +178,101 @@ export default {
           label: '高级版',
           value: 2
         }
-      ]
+      ],
+      isShowPayDialog: false,
+      isShowErrDialog: false,
+      isShowCheckOrder: false,
+      bankId: 0,
+      orderId: 0
     }
   },
+  methods: {
+    onParamChange: function(attr,val) {
+      this[attr] = val;
+      this.getPrice();
+    },
+    getPrice: function(){
+      let data = {
+        buyNum: this.buyNum,
+        buyType: this.buyType.value,
+        period: this.period.value,
+        version: this.versions.map(function(item){
+          return item.value;
+        }).join(',')
+      }
+      this.$http.post('/api/getPrice',data).then((res)=>{
+        this.price = res.data.amount;
+      },(err)=>{
+        console.log(err);
+      })
+    },
+    showPayDialog: function(){
+      this.isShowPayDialog = true;
+    },
+    hidePayDialog: function() {
+      this.isShowPayDialog = false;
+    },
+    onChangeBanks: function(bank){
+      this.bankId = bank.id;
+    },
+    confirmBuy: function(){
+      let data = {
+        buyNum: this.buyNum,
+        buyType: this.buyType.value,
+        period: this.period.value,
+        version: this.versions.map(function(item){
+          return item.value;
+        }).join(','),
+        bankId: this.bankId
+      }
+      this.$http.post('/api/createOrder',data).then((res)=>{
+         this.orderId = res.data.orderId;
+      },(err)=>{
+        console.log(err);
+      });
+      this.hidePayDialog();
+      this.isShowCheckOrder = true;
+    },
+    hideErrDialog: function(){
+      this.isShowErrDialog = false;
+    },
+    hideCheckOrder: function(){
+      this.isShowCheckOrder = false;
+    }
+  },
+  mounted: function(){
+    this.buyNum = 1;
+    this.buyType = this.buyTypes[0];
+    this.versions = [this.versionList[0]];
+    this.period = this.periodList[0];
+    this.getPrice();
+  }
 }
 </script>
+
+<style scoped>
+.buy-dialog-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.buy-dialog-btn {
+  margin-top: 20px;
+}
+.buy-dialog-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.buy-dialog-table td,
+.buy-dialog-table th{
+  border: 1px solid #e3e3e3;
+  text-align: center;
+  padding: 5px 0;
+}
+.buy-dialog-table th {
+  background: #4fc08d;
+  color: #fff;
+  border: 1px solid #4fc08d;
+}
+</style>
+
 

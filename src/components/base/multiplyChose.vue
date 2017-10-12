@@ -41,12 +41,13 @@ export default {
           let nowArray = this.nowIndexs.map(function(item){
               return that.selections[item];
           });
+          this.$emit('on-change',nowArray);
       }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .chooser-component {
   position: relative;
   display: inline-block;
