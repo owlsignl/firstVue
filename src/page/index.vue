@@ -32,7 +32,7 @@
                         <h2>{{item.title}}</h2>
                         <p>{{item.description}}</p>
                         <div class="index-board-button">
-                            <router-link class="button" :to="{path: '/'}">点击购买</router-link>
+                            <router-link class="button" :to="{path: '/detail/' + item.tokey}">点击购买</router-link>
                         </div>
                     </div>
                </li>
@@ -127,22 +127,26 @@ export default {
                 {
                      title: '开放产品',
                      description: '开放产品是一款开放产品',
-                     id: 'car'
+                     id: 'car',
+                     tokey: 'count'
                 },
                 {
                      title: '品牌营销',
                      description: '品牌营销帮助你的产品更好地找到定位',
-                     id: 'earth'
+                     id: 'earth',
+                     tokey: 'analysis'
                 },
                 {
                     title: '使命必达',
                     description: '使命必达快速迭代永远保持最前端的速度',
-                    id: 'loud'
+                    id: 'loud',
+                    tokey: 'forecast'
                 },
                 {
                     title: '勇攀高峰',
                     description: '帮你勇闯高峰，到达事业的顶峰',
-                    id: 'hill'
+                    id: 'hill',
+                    tokey: 'publish'
                 }
             ]
         }
@@ -150,7 +154,7 @@ export default {
   
 }
 </script>
-<style>
+<style scoped>
     .index {
   width: 1200px;
   margin: 0 auto;
